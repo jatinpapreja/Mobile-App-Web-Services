@@ -37,6 +37,7 @@ public class UserController {
 		
 		UserDto createdUser = userService.createUser(userDto);
 		BeanUtils.copyProperties(createdUser, returnValue);
+		
 		return returnValue;
 	}
 	
