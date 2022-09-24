@@ -1,14 +1,19 @@
 package com.app.ws.service.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.app.ws.exception.UserServiceException;
 import com.app.ws.io.entity.UserEntity;
@@ -106,6 +111,7 @@ public class UserServiceImpl implements UserService {
 		return returnValue;
 	}
 
+	@Transactional
 	@Override
 	public void deleteUser(String userId) {
 		UserEntity userEntity = userRepository.findByUserId(userId);
@@ -115,6 +121,25 @@ public class UserServiceImpl implements UserService {
 		
 		userRepository.delete(userEntity);
 		
+	}
+
+	@Override
+	public List<UserDto> getUsers(int page, int limit) {
+		List<UserDto> returnValue = new ArrayList<>();
+		
+		if(page>0)page=page-1;		//by default page value starts with 0
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<UserEntity> usersPage = userRepository.findAll(pageableRequest);
+		List<UserEntity> users = usersPage.getContent();
+		
+		for(UserEntity userEntity: users) {
+			UserDto userDto = new UserDto();
+			BeanUtils.copyProperties(userEntity, userDto);
+			returnValue.add(userDto);
+		}
+		return returnValue;
 	}
 
 }
