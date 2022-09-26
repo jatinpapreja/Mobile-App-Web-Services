@@ -38,7 +38,9 @@ public class UserController {
 		UserRest returnValue = new UserRest();
 
 		UserDto userDto = userService.getUserByUserId(id);
-		BeanUtils.copyProperties(userDto, returnValue);
+//		BeanUtils.copyProperties(userDto, returnValue);
+		ModelMapper modelMapper = new ModelMapper();
+		returnValue = modelMapper.map(userDto, UserRest.class);
 
 		return returnValue;
 	}

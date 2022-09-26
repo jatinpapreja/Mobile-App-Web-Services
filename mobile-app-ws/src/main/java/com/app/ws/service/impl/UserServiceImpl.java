@@ -103,7 +103,13 @@ public class UserServiceImpl implements UserService {
 		if (userEntity == null)
 			throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
 
-		BeanUtils.copyProperties(userEntity, returnValue);
+//		BeanUtils.copyProperties(userEntity, returnValue);
+		ModelMapper modelMapper = new ModelMapper();
+		
+		//This line of code is added because userEntity Mapping was not working.
+        modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
+
+		returnValue = modelMapper.map(userEntity, UserDto.class);
 
 		return returnValue;
 	}
