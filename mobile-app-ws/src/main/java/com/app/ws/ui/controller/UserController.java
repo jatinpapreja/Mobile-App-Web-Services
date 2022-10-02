@@ -141,5 +141,23 @@ public class UserController {
 		ModelMapper modelMapper = new ModelMapper();
 		return modelMapper.map(addressDto, AddressesRest.class);
 	}
+	
+	@GetMapping(path="/email-verification")
+	public OperationStatusModel verifyEmailToken(@RequestParam(value="token") String token) {
+		OperationStatusModel returnValue = new OperationStatusModel();
+		returnValue.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
+		
+		boolean isVerified = userService.verifyEmailToken(token);
+		
+		if(isVerified) {
+			returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+		}
+		else {
+			returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
+
+		}
+			
+		return returnValue;
+	}
 
 }
