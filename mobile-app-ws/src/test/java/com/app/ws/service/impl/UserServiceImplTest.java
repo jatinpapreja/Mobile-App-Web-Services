@@ -22,6 +22,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.app.ws.exception.UserServiceException;
 import com.app.ws.io.entity.AddressEntity;
 import com.app.ws.io.entity.UserEntity;
 import com.app.ws.io.repositories.UserRepository;
@@ -86,6 +87,22 @@ class UserServiceImplTest {
 	}
 	
 	@Test
+	final void testCreateUser_CreateUserServiceException() {
+		when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
+		UserDto userDto = new UserDto();
+		userDto.setAddresses(getAddressesDto());
+		userDto.setFirstName("Jatin");
+		userDto.setLastName("Papreja");
+		userDto.setEmail("test@test.com");
+		userDto.setPassword("12345678");
+		
+		assertThrows(UserServiceException.class,
+				()->{
+					userService.createUser(userDto);
+				});
+	}
+	
+	@Test
 	final void testCreateUser() {
 		
 		
@@ -125,7 +142,7 @@ class UserServiceImplTest {
 		addressDto.setPostalCode("ABC123");
 		
 		AddressDto billingAddressDto = new AddressDto();
-		billingAddressDto.setType("shipping");
+		billingAddressDto.setType("billing");
 		billingAddressDto.setCity("Delhi");
 		billingAddressDto.setCountry("India");
 		billingAddressDto.setStreetName("123 Street name");
