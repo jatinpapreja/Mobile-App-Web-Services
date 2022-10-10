@@ -60,9 +60,9 @@ class UserRepositoryTest {
 	}
 
 	@Test
-	void testFindUserByFirstName() {
+	void testFindUsersByFirstName() {
 		String firstName = "Jatin";
-		List<UserEntity> users = userRepository.findUserByFirstName(firstName);
+		List<UserEntity> users = userRepository.findUsersByFirstName(firstName);
 		assertNotNull(users);
 		assertTrue(users.size() == 2);
 
@@ -71,15 +71,60 @@ class UserRepositoryTest {
 	}
 
 	@Test
-	void testFindUserByLastName() {
+	void testFindUsersByLastName() {
 		String lastName = "Papreja";
-		List<UserEntity> users = userRepository.findUserByLastName(lastName);
+		List<UserEntity> users = userRepository.findUsersByLastName(lastName);
 		assertNotNull(users);
 		assertTrue(users.size() == 2);
 
 		UserEntity user = users.get(0);
 		assertEquals(lastName, user.getLastName());
 	}
+	
+	@Test
+	void testFindUsersByKeyword() {
+		String keyword = "prej";
+		List<UserEntity> users = userRepository.findUsersByKeyword(keyword);
+		assertNotNull(users);
+		assertTrue(users.size() == 2);
+
+		UserEntity user = users.get(0);
+		assertTrue(user.getFirstName().contains(keyword)||
+				user.getLastName().contains(keyword));
+	}
+	
+	@Test 
+	void testfindUsersFirstNameAndLastNameByKeyword() {
+		String keyword = "prej";
+		List<Object[]> users = userRepository.findUsersFirstNameAndLastNameByKeyword(keyword);
+		assertNotNull(users);
+		assertTrue(users.size() == 2);
+
+		Object[] user = users.get(0);
+		assertTrue(user.length==2);
+		
+		String userFirstName = String.valueOf(user[0]);
+		String userLastName = String.valueOf(user[1]);
+		
+		assertNotNull(userFirstName);
+		assertNotNull(userLastName);
+
+		System.out.println(userFirstName);
+		System.out.println(userLastName);
+	}
+	
+	@Test
+	void testUpdateUserEmailVerificationStatus() {
+		boolean newEmailVerificationStatus = false;
+		userRepository.updateUserEmailVerificationStatus(newEmailVerificationStatus, "1a2b3c");
+		
+		UserEntity storedUserDetails = userRepository.findByUserId("1a2b3c");
+		
+		boolean storedEmailVerificationStatus = storedUserDetails.getEmailVerificationStatus();
+		
+		assertEquals(newEmailVerificationStatus,storedEmailVerificationStatus);
+	}
+	
 
 	private void createRecords() {
 		// Prepare User Entity
