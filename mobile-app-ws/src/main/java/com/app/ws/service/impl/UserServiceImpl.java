@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.app.ws.exception.UserServiceException;
 import com.app.ws.io.entity.UserEntity;
 import com.app.ws.io.repositories.UserRepository;
+import com.app.ws.security.UserPrincipal;
 import com.app.ws.service.UserService;
 import com.app.ws.shared.Utils;
 import com.app.ws.shared.dto.AddressDto;
@@ -80,11 +81,14 @@ public class UserServiceImpl implements UserService {
 		if (userEntity == null)
 			throw new UsernameNotFoundException(email);
 
-		return new User(userEntity.getEmail(), 
-				userEntity.getEncryptedPassword(), 
-				userEntity.getEmailVerificationStatus(),
-				true,true,true,
-				new ArrayList<>());
+		
+		return new UserPrincipal(userEntity);
+		
+//		return new User(userEntity.getEmail(), 
+//				userEntity.getEncryptedPassword(), 
+//				userEntity.getEmailVerificationStatus(),
+//				true,true,true,
+//				new ArrayList<>());
 	}
 
 	@Override
