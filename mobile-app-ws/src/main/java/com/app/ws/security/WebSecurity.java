@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import com.app.ws.io.repositories.UserRepository;
 import com.app.ws.service.UserService;
 
-@EnableGlobalMethodSecurity(securedEnabled=true)
+@EnableGlobalMethodSecurity(securedEnabled=true,prePostEnabled=true)
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter{
 	
